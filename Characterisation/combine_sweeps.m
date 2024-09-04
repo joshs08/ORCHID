@@ -32,5 +32,5 @@ end
 % try
 %     close (ft1, ft2);
 % catch
-%     disp ("close yourself")
+%     disp ("close fig error")
 % end

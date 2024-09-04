@@ -1,6 +1,6 @@
-%%take fluoro data, finds the max, finds the baseline region as x
-%%images before the max, calculates the average fluorescence over that
-%%region, calculates max deltaF/F
+% take fluoro data, finds the max, finds the baseline region as x
+% images before the max, calculates the average fluorescence over that
+% region, calculates max deltaF/F
 
 % TODO: should change this figure to display time and not images
 
@@ -27,8 +27,8 @@ axis tight;
 try
     xline (time(light_imgs (1,:)), 'g');
     xline (time(light_imgs (2,:)), 'r');
-catch
-    disp ('No data available for images of blue light!');
+catc
+    disp ('No data available for images when blue light was on/off');
 end
 
 tr = input ("do you want to take a reading? 0/1"); %take reading
@@ -70,7 +70,7 @@ if tr == 1
         mml = xline (time(ls+sagap), '.b');
         smml = xline (time(le-sbgap), '.b');
         hold off;
-        mmgood = input ("does the epoch look good? 0/1");
+        mmgood = input ("View epoch. Press 1 to continue or 0 to change epoch.");
         iteration = iteration + 1;
     end
     %output the images we take the mean over, for BG deltaF calc
@@ -115,7 +115,7 @@ if tr == 1
             fbe = xline (time(base_ind_e), 'k');
             hold off;
 
-            answ3 = input ("Now is this a suitable position for baseline?? 0/1");
+            answ3 = input ("View baseline. 1 to continue or 0 to change");
 
             if answ3 == 1
                 correct = true;

@@ -1,5 +1,4 @@
-
-%% this function takes a recording folder rec_folder, and reads in any .ome.tif files
+% this function takes a recording folder rec_folder, and reads in any .ome.tif files
 % it then asks the user to select ROI and background, performs a background subtraction
 % and returns the fluorescence change for each image. It requires input of boolean
 % new_cell, which if true will get the user to draw a new ROI. it returns
@@ -142,7 +141,7 @@ if new_cell == false
     axis tight
     % end of fluoro_temp
 
-    answ = input ('Do these ROIs and fluoro trace look suitable? 0/1 (zero is no)');
+    answ = input ('Do these ROIs look well-drawn? 0/1 (zero is no)');
 
     if answ == 1
         disp ('Using the previous ROIs');
@@ -157,8 +156,8 @@ if new_cell == false
 
             figure(fm);
 
-            title('Draw better N ROI)');
-            disp('Draw a better neuron ROI polygon');
+            title('Redraw soma ROI)');
+            disp('Redraw soma ROI polygon');
             N_poly = drawpolygon('LineWidth', 0.1); %get coords of a specific ROI
 
             % split into the x and y coordinates of each polygon
@@ -185,7 +184,7 @@ if new_cell == false
             axis tight
             % end of fluoro_temp
 
-            g = input ("Does it look alright? 1/0");
+            g = input ("View data. 1 to continue or 0 to retry");
             close (ft);
             if g == 1
                 answ = 1;
@@ -194,8 +193,8 @@ if new_cell == false
         answbg = 0;
         while answbg == 0
             figure (fm);
-            title('Draw better BG ROI)');
-            disp('Draw a better background polygon');
+            title('Redraw BG ROI)');
+            disp('Redraw background polygon');
             bg_poly = drawpolygon('LineWidth', 0.1);
 
             bg_xy = bg_poly.Position;
@@ -221,7 +220,7 @@ if new_cell == false
             axis tight
             % end of fluoro_temp
 
-            g = input ("Does it look alright? 1/0");
+            g = input ("View data. 1 to continue or 0 to retry");
             close (ft);
             if g == 1
                 answbg = 1;
@@ -240,8 +239,8 @@ if new_cell == true
     good = false;
     while good == false
         figure (fm);
-        title('Mean image (draw N then BG ROI)');
-        disp('Draw your neuron ROI polygon');
+        title('Mean image (draw soma then BG ROI)');
+        disp('Draw your soma ROI polygon');
         N_poly = drawpolygon('LineWidth', 0.1); %get coords of a specific ROI
 
         % get the x and y coordinates of the neuronal polygon
@@ -260,11 +259,11 @@ if new_cell == true
         plot (x, fluoro_temp);
         axis tight
         figure (ft);
-        g = input ("Does it look alright? 1/0");
+        g = input ("View data. 1 to continue or 0 to retry");
         try
             close (ft);
         catch
-            disp ("Not able to close a figure. Don't stress.");
+            disp ("Not able to close a figure.");
         end
         if g == 1
             good = true;
@@ -277,7 +276,7 @@ if new_cell == true
     %if necessary
     while goodbg == false
         figure (fm);
-        disp('Draw your background polygon');
+        disp('Draw your BG polygon');
         bg_poly = drawpolygon('LineWidth', 0.1);
 
         % get the x and y coordinates of the bg polygon
@@ -296,7 +295,7 @@ if new_cell == true
         plot (x, fluorobg_temp);
         axis tight
         figure (ft);
-        gbg = input ("Does it look alright? 1/0");
+        gbg = input ("View data. 1 to continue or 0 to retry");
         close (ft)
         if gbg == 1
             goodbg = true;

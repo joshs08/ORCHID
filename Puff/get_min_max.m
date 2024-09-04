@@ -1,4 +1,4 @@
-%% this class will give you the option to select the min or max of a
+% this class will give you the option to select the min or max of a
 %(usually puffing wcp) trace, or both, in which case it will plot
 %each sequentially and ask if you want min or max
 
@@ -10,7 +10,7 @@ last = size(output, 1);
 
 timeint = time(end)/size(time,2);
 while correct == false
-    hlb = input('Do you want to take the max (h), min (l), both (b) or neither (x)? If trace is not flat say (b)', 's');
+    hlb = input('Do you want to take the max (h), min (l), both (b) or neither (x)? If trace is trended say (b)', 's');
     if strcmp (hlb, 'h')
         psp = max (output(bs:last, :));
         correct = true;

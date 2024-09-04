@@ -1,8 +1,8 @@
-%% to read in an lfp trace from during an in vivo ORCHID experiment
+% to read in an lfp trace from during an in vivo ORCHID experiment
 % in the form of an xlsx file. 
 % it saves a figure of the trace 
 
-function [lfp, lfptime] = read_in_lfp (path_lfp, path_results, date, cell_num, trace_num, cf);
+function [lfp, lfptime] = read_in_lfp (path_lfp, path_results, date, cell_num, trace_num, cf)
 
 
 fn = date + "_" + cell_num + "_" + cf;
@@ -82,7 +82,7 @@ saveas(figlfp, fp);
 % end
 
 
-%temp = input ("does it look bueno?");
+%temp = input ("View data");
 
 path_results = 'D:\Joshua\data\aav_ORCHID_in_vivo\LFP\230518\Mouse2';
 path_lfp = "D:\Joshua\data\aav_ORCHID_in_vivo\LFP\230518\Mouse2";

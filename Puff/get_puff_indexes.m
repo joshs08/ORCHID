@@ -1,4 +1,4 @@
-%% this short class takes a puff trace and gets the index of puff start and puff end
+% this short class takes an ORCHID/puff trace and gets the index of puff start and puff end
 % we separate the puff at the value of 0.1 
 
 function  [puffs, puffe] = get_puff_indexes (puff)

@@ -1,6 +1,6 @@
-%%take fluoro data, finds the max, finds the baseline region as x
-%%images before the max, calculates the average fluorescence over that
-%%region, calculates max deltaF/F
+% This script takes fluoro data, finds the max, finds the baseline region as x
+% images before the max, calculates the average fluorescence over that
+% region, calculates max deltaF/F
 
 % TODO: should change this figure to display time and not images
 
@@ -9,7 +9,7 @@ function [bf, maxF, df, sds, maxFSmooth, dfSmooth, sdsSmooth, bdps, window] = ge
 N = size (F, 1);
 x = (1:1:N);
 time = time(1:N);
-%% testing which window size to use
+% testing which window size to use for smoothing
 
 windowSizes = 3 : 1 : 20;
 for k = 1 : length(windowSizes)
@@ -38,7 +38,7 @@ end
 % Smooth F trace
 %can try a bunch of different ones
 if faster == false
-    dywts = input("Do you want to smooth the trace? 0/1");
+    dywts = input("Press 1 to smooth the trace (else 0)");
 else
     dywts = 1;
 end
@@ -59,7 +59,7 @@ if (dywts == 1)
         axis tight;
         hold off
         if faster == false
-            good = input ("Does it look good? 0/1");
+            good = input ("Press 1 to continue or 0 to smooth again");
         else
             good = 1;
         end
@@ -67,7 +67,7 @@ if (dywts == 1)
     try
         close (figs);
     catch
-        disp ("Cannot close fig!");
+        disp ("Cannot close fig");
     end
 else
     Fs = ones (1, size(x,2));
@@ -93,7 +93,7 @@ try
     xline (time(sa), 'g');
     xline (time(sb), 'g');
 catch
-    disp ('No puff data available!');
+    disp ('No puff data available');
     img_ps = 1;
 end
 
@@ -109,7 +109,7 @@ saveas (ff, savedir);
 
 if faster == false
     disp ("Red lines: where baseline measurement was taken between. Blue lines: blue light on and off. Green lines: where the dF measurement was taken between.");
-    temp = input ("looks suitable?");
+    temp = input ("View data. Press any key and ENTER.");
 end
 %percentage increase (dF/F)
 % we can use baselineF here as we have added avgF to each DP in the main
@@ -119,8 +119,8 @@ end
 change = mF - baselineF;
 deltaF = change/baselineF;
 
-disp ("DeltaF: " + deltaF + ". Baseline: " + baselineF + ". Change: " + change)
-ttt = input ("These are the results. PAK");
+%disp ("DeltaF: " + deltaF + ". Baseline: " + baselineF + ". Change: " + change)
+%ttt = input ("Abalysis output. Press any key and enter.");
 
 bf = baselineF; maxF = mF; df = deltaF; maxFSmooth = 0; dfSmooth = 0; sdsSmooth = 0; sds=0; bdps = 0;
 close (ff);

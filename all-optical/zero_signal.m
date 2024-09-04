@@ -1,10 +1,8 @@
-%% this funciton takes an input signal and a num_images, plots them, gets the user to select the signal, and then
-%replaces the signal with a straight line. this will improve curve fitting
-%for baseline correciton. fit the curve to this output and then subtrcat it
-%from the unzeroed signal
-
-%added functionality to draw the light start and end lines on, if it
-%isORCHID
+% this funciton takes an input signal and num_images, plots them, 
+% gets the user to select the points between light onset and light offset, and then
+% replaces the trace between these points straight line. this improves curve fitting
+% for detrending correction. fit the curve to this output and then subtract
+% the curve from the original trace.
 
 function [output] = zero_signal (data, num_images, light_ttls, isORCHID, faster)
 good = false; 
@@ -48,11 +46,11 @@ while good == false
     plot (x, data);
     n = n+1;
     if isORCHID == false
-        ti = input ("Looks suitable? 1/0. 0 to zero more segments");
+        ti = input ("View output. 1/0. 0 to zero more segments");
     elseif isORCHID == true && faster == true &&  n >= 5
-        ti = input ("Looks suitable? 1/0. 0 to zero more segments");
+        ti = input ("View output. 1/0. 0 to zero more segments");
     elseif isORCHID == true && faster == false
-        ti = input ("Looks suitable? 1/0. 0 to zero more segments");
+        ti = input ("View output. 1/0. 0 to zero more segments");
     end
     if (ti == 1)
         good = true;

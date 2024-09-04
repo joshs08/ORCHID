@@ -1,9 +1,5 @@
-%% this class fits an exponential curve to fluoro data and subtracts the curve,
-% this corrects for photobleaching
-% notes:
-% add catch for wrong number input
-
-%%NB uncomment SAVEAS
+% this class fits an exponential curve to fluoro data and subtracts the curve,
+% this corrects for photobleaching/trends
 
 function [corrected, uncorrected] = correct_photobleaching_zeroed (data, zeroed, savedir, timef)
 
@@ -66,7 +62,7 @@ while g == false
                 p3 = polyfit (x,y,1);
                 l3 = polyval (p3, n);
                 h3 = plot (n, l3,'g--');
-                g = input ("Looks good? 1/0");
+                g = input ("View data. 1 to continue or 0 to retry");
                 if g == 0
                     delete (h3);
                 end
@@ -93,7 +89,7 @@ while g == false
     
     axis tight;
     
-    c = input ("Looks good? 1/0");
+    c = input ("View data. 1 to continue or 0 to retry");
     if c == 1
         g = true;
         saveas (fc, savedir + "_bleach.fig");

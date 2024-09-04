@@ -1,5 +1,5 @@
-%% this small class finds the idex of when the camera trace ends.
-% this indexx can be used to cut off voltage/current/puff traces (as well
+% this small class finds the idex of when the camera trace ends.
+% this index can be used to cut off voltage/current/puff traces (as well
 % as the camera trace itself) at this point, as we have no need for data
 % that was not imaged 
 

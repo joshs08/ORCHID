@@ -1,5 +1,6 @@
-%% this small class will count the number of images in a camera ttl trace
-%% it will also get the image on which a puff starts and ends
+% this small class will count the number of images in a camera ttl trace
+% it will also get the image on which a puff starts and ends
+
 %input a camera trace cut off just after the last image for max efficiency
 
 function  [num_imgs, steps] = count_images_get_vSteps (camera, voltage, numswps)

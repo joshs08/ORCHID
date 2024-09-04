@@ -1,4 +1,4 @@
-%% this class reads in specified variables from a text file
+% this class reads in specified variables from a text file
 
 function [vars] = get_txt_vars (path)
 

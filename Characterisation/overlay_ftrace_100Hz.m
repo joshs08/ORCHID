@@ -1,4 +1,4 @@
-%% this takes one F trace that covers multiple wcp sweeps (number given in numswps)
+% this takes one F trace that covers multiple wcp sweeps (number given in numswps)
 % and overlays them onto one figure
 % it is designed to work with F response to V/I step protocol
 % path is the path to save the overlayed figure (to 'Overlay' folder)
@@ -103,9 +103,9 @@ while (bueno == false)
         xline (stepArr (k,1));
         xline (stepArr (k,2));
     end
-    if input ("Looks suitable?0/1") == 1
+    if input ("View data. 1 to continue, otherwise 0 to change parameters.") == 1
         bueno = true;
-        temp = input ("Is saved, view and PAK");
+        temp = input ("Is saved, view and press any key.");
 
         if usedBGCForBoth == 2
             path_save_file = fullfile (path_save, rec_num + "_peakselection_BG2.fig");
@@ -129,7 +129,7 @@ if twentyfiveHz == 1
 else
     slt = 100;
 end
-if input ("Does a signal length of " + slt + " look good? 0/1") == 1
+if input ("Press 1 if signal length of " + slt + " is suitable. 0/1") == 1
     sl = slt;
 else
     sl = input ("Enter better signal length");
@@ -185,7 +185,7 @@ saveas (figf, path_save_file);
 
 close (figf);
 
-if input ("Do you wish to get dF/Fs? 0/1") == 1
+if input ("Do you wish to calculate dF/Fs? 0/1") == 1
     get_deltaF_vsteps(path_save_file, path_save, rec_num, bll, sl, usedBGCForBoth, twentyfiveHz);
 end
 

@@ -1,7 +1,7 @@
-%% this script averages the three fluorescence traces for npulses light pulses
+% this script averages the fluorescence traces for npulses light pulses.
 % takes in the BG corrected fluoro trace (from get_fluoro_changes),
 % and the pulse image starts and ends (from get_v_trace_ORCHID),
-% and averages the light responses
+% and averages the light responses for each optogenetic activation/
 
 % NB - if the trace has a . extension (ie 004.2) it won't save. add code to remove this dot
 
@@ -63,7 +63,7 @@ axis tight;
 figoverlay = figure();
 plot (fpulse);
 if faster == false
-    temp = input('looks suitable? not able to change it either way unfortunately');
+    temp = input('View data. Press any key and ENTER.');
 end
 save_dir_avg = save_dir + "_avg";
 save_dir_overlay = save_dir + "_overlay";

@@ -1,4 +1,4 @@
-%% this script displays the voltage trace from the .wcp file from a patched cell
+% this script displays the voltage trace from the .wcp file from a patched cell
 % it cuts the trace off at imaging end
 % gets the min/max PSP of each wcp trace
 % counts the images
@@ -65,7 +65,7 @@ end
 % if they are identical, we can assume the camera trace of one is identical
 % for all, and we can take an endc of any trace
 if (all(diff(endc_arr) == 0)) == 0
-    endc_trace = input ('the traces do not have the same endc. Enter a trace with correct endc:');
+    endc_trace = input ('the traces do not have the same camera frame data. Enter a trace with correct camera frame data:');
     endc = endc_arr (endc_trace);
 else
     endc = endc_arr (1);
@@ -101,7 +101,7 @@ end
 % if they are identical, we can assume the puff trace of one is identical
 % for all, and we can calculate one puffs img and one puffe img
 if ((all(diff(puffs_arr) == 0)) == 0) || ((all(diff(puffe_arr) == 0)) == 0)
-    puff_trace = input ('the traces do not have the same puff s/e. Enter a trace with correct puff:');
+    puff_trace = input ('the traces do not have the same puff start/end. Enter a trace with a correct puff TTL:');
     puffs = puffs_arr (puff_trace);
     puffe = puffe_arr (puff_trace);
 else
@@ -135,7 +135,7 @@ if s == 1
         rsv = figure ();
         plot(time,voltage,time,voutput);legend('Raw','Smoothed');
         
-        g = input ("Does this look bueno? 1/0");
+        g = input ("View data. 1 to continue or 0 to smooth again");
         if g == 0
             a2 = input ("Select new gaussian? 1/0");
             if a2 == 1
@@ -183,7 +183,7 @@ plot (time, voutput);
 hold on;
 
 if patchData == 1
-    patch = input ("Do you want to further analyse the patch data? 1/0");
+    patch = input ("Do you want to further analyse the patch data i.e., get dV? 1/0");
 else
     patch = 0;
 end
@@ -197,7 +197,7 @@ if (patch == 1)
     %if baseline is partly on the peak, you can select a new
     %basline
     
-    answ2 = input ("Is this a bueno position for baseline? 0/1 (zero is no)");
+    answ2 = input ("Is this a suitable position for baseline? 0/1 (zero is no)");
     
     %you can iteratively and indefinitely select baselines if you wish ;)
     while answ2 == 0
@@ -220,13 +220,13 @@ if (patch == 1)
         vbel =  xline (time(bei), '--r');
         hold off;
         
-        answ2 = input ("NOW is this a bueno position for baseline?? 0/1");
+        answ2 = input ("Now is this a suitable position for baseline? 0/1");
     end
     
     try
         close (tf);
     catch
-        disp ("Could not close a figure, close it yourself lazyass");
+        disp ("Could not close a figure.");
     end
     %% get vm and ihold
     
@@ -241,7 +241,7 @@ else %end of if we want to analyse patch data further
     try
         close (tf);
     catch
-        disp ("Could not close a figure, close it yourself lazyass");
+        disp ("Could not close a figure");
     end
     
 end

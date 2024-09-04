@@ -1,6 +1,8 @@
-%% this script displays the voltage trace from the .wcp file from a patched cell
-% It imports the first five (V and I and light TTL and camera and blue arduino TTL) channels
-% Applies a gaussian filter to data
+% this script displays the voltage trace from the .wcp file from a patched
+% cell.
+% It imports the first five (V input, I input, light TTL output, 
+%   camera frame input, blue light activation TTL input) channels
+% Applies a gaussian filter to data.
 % Returns dummy data for ALL the returned (and thus required) variables (img_ps, img_pe (image
 % puff starts and ends on) etc. This is necessary as these variables are
 % not used for ORCHID analysis. 
@@ -92,7 +94,7 @@ end
 % if they are identical, we can assume the camera trace of one is identical
 % for all, and we can take an endc of any trace
 if (all(diff(endc_arr) == 0)) == 0
-    endc_trace = input ('the traces do not have the same endc. Enter a trace with correct endc:');
+    endc_trace = input ('the traces do not have the same camera frame input. Enter a trace with correct camera frame data:');
     endc = endc_arr (endc_trace);
 else
     endc = endc_arr (1);

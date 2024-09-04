@@ -1,4 +1,4 @@
-%% this function open the BG figures for a specific cell we are analysing and subtracts the smoothed BG from the 
+% this function opens the BG figures for a specific cell we are analysing and subtracts the smoothed BG from the 
 %BG trace, and then takes the images we took the signal and baseline values
 %during for getdeltaF, and getsdeltaF for the BG too
 
@@ -27,7 +27,7 @@ xline (xbg(imgs_Fiv (2,1)), 'r');
 xline (xbg(imgs_BGiv (:,1)), 'k');
 hold off;
 
-t = input ("does this look suitable?");
+t = input ("View data.");
 
 saveas (figdf, path_save);
 

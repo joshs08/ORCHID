@@ -1,6 +1,6 @@
-%%take fluoro data, finds the max, finds the baseline region as x
-%%images before the max, calculates the average fluorescence over that
-%%region, calculates max deltaF/F
+%takes fluoro data, finds the max, finds the baseline region as x
+%images before the max, calculates the average fluorescence over that
+%region, calculates max deltaF/F
 
 % TODO: should change this figure to display time and not images
 
@@ -54,13 +54,13 @@ if (smoothing == 1)
         xlabel ("time (ms)");
         axis tight;
         hold off
-        %good = input ("Does it look good? 0/1"); %if you  reinstate the
+        %good = input ("Does it look suitable? 0/1"); %if you  reinstate the
         %while
     %end %also for while
     try
         close (figs);
     catch
-        disp ("Cannot close fig!");
+        disp ("Cannot close fig");
     end
 else
     Fs = ones (1, size(x,2));
@@ -83,7 +83,7 @@ try
     xline (time(img_ps), 'g');
     xline (time(img_pe), 'g');
 catch
-    disp ('No puff data available!');
+    disp ('No puff data available');
     img_ps = 1;
 end
 mm = input ("Do you want the max (h) or the min (l) or neither (x)?", 's');
@@ -227,7 +227,7 @@ if answ2 == 0
         fbe = xline (time(base_ind_e), 'k');
         hold off;
 
-        answ3 = input ("Now is this a suitable position for baseline?? 0/1");
+        answ3 = input ("Now is this a suitable position for baseline? 0/1");
 
         if answ3 == 1
             correct = true;

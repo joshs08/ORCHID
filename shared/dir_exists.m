@@ -1,4 +1,4 @@
-%% checks if a folder exists, and if not it makes it
+% checks if a folder exists, and if not it makes it
 function [] = dir_exists (path);
 
 if ~exist(path, 'dir')

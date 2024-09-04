@@ -1,4 +1,4 @@
-%% this class takes a 0 Mg ORCHID recording and gets all the images that light pulses appear on
+% this class takes a 0 Mg ORCHID recording and gets all the images that light pulses appear on
 
 function [light_images] = getLightPulsesORCHID0Mg (puff, camera, npulses)
 

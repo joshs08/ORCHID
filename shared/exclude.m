@@ -1,4 +1,4 @@
-%% this class will show a user a dialog to exclude files from a list
+% this class will show a user a dialog to exclude files from a list
 % usage e.g., cell_sfs = exclude (cell_sfs);
 
 function [output] = exclude (files)

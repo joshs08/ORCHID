@@ -1,45 +1,54 @@
-%% The parent script for analysis of ORCHID imaging and electrophysiology data
+% The main script for analysis of ORCHID imaging and electrophysiology data
+
+% To run this pipeline: add all folders to path, ensure your data folder 
+% structure is correct, set your anaylsis parameters, and run this script.
 
 % Data input:
 % For ORCHID imaging: typically a uManager tiff stack (.ome.tif) and
 %   a .wcp file where the TTL pulses used to trigger the blue light were
-%       recorded
+%       recorded.
 %   Additional: a uManager metadata file containing imaging parameters,
 % For electrophysiology: a .wcp file containing the V/I clamp recording OR
-%       a .xlsx file of a LFP recording
-%   Additional: a cell_info.txt where information pertaining to the recording was recorded
+%       an .xlsx file of a LFP recording.
+%   Additional: a cell_info.txt with information pertaining to the recording.
 % For recordings in which there was activation of endogenous GABAARs by GABA puff:
 %   identical to ORCHID imaging, with the .wcp file recording the puff TTL
-% 
-% What the script does:
-%   Reads in the ephys data, plotting the V/I clamp or LFP recording if there is
-%   one
-%   Read in images, create a mean image, allow user to select a cell ROI and then a background (BG) ROI
-%   Plot the F trace for both of these ROIs
-%   You can then select whether to subtract the BG or not .
-% script will take raw imaging files of fluoro changes after puffing, it will:
-% subtract backgroung, correct for bleaching, display the trace.
-% It will then display the relevant patch trace, filtered and cut
 
-% Data and results structure:
+% Script summary:
+%   - Loads the ephys data, plots the V/I clamp (in vitro) or LFP recording (in vivo) if there is
+%       one.
+%   - Read in images, create a mean image, allow user to select a cell ROI
+%       and then a background (BG) ROI.
+%   - Plot the fluorescence (F) trace for both of these ROIs.
+%   - Subtracts the BG
+%   - Performs detrending. 
+%   - Caulculates dF
+% Script cycles through cell folders in dat folder, and through individual
+% recordings for each cell. You can select to only analyse a portion of the
+% data in each folder if you wish (during pipeline).
+
+% Data and results structure required for script to run as is:
 %   Data: path\date\cell number\image stack folder
-%   date: e.g., 240225, contains all cell folders (e.g., 01-08)
-%   cell number: e.g., 01. This folder contains all .wcp files (e.g., 240225_001.wcp) and all
-%       image stack folders (e.g., 001(1), 001(2) for that cell. Where 001
-%       relates to the .wcp file number and the number in brackets is the sweep
-%       number.
-%   image stack folder: e.g., 001(1). Contains the .ome.tif stacks and the
-%       metadata file from uManager acquisition.
-%   results: a folder reesults is created in the path given, with date and
-%       cell folders created in that
+%       date: e.g. 240225, contains all cell folders (e.g., 01-08, one for each cell)
+%       cell number: e.g. 01. This folder contains all .wcp files (e.g. 240225_001.wcp) and all
+%           image stack folders (e.g. 001(1), 001(2) for that cell. Where 001
+%           relates to the .wcp file number and the number in brackets is the sweep
+%           number in the wcp file).
+%       image stack folder: e.g., 001(1). Contains the .ome.tif stacks and the
+%           metadata file from uManager acquisition.
+%       results: a folder results is created in the path given.
 
-% apologies if any idiosyncrartic comments or text lines have snuck through. I was keeping myself entertained. 
+% Script options:
+%   Depending on your analysis parameters, you can analyse data from either
+%   all-optical ORCHID experiments (in vitro or in vivo), ORCHID/GABA puff
+%   experiments, "characterisation" experiments (where a cell was patched),
+%   and within these you can select to analyse 0 Mg2+ type recordings.
 
-%% set analysis parameters
-% NB! If you have been using open_relevant_info.m, "clear all" before running this again!
+% Apologies if any non-professional comments or text lines have snuck through. I was keeping myself amused. 
 
+% analysis parameters:
 % the date folder your imaging data is in
-date = "230323";
+date = "230610";
 % path to data, one up from date folder
 path_data = 'D:\Joshua\data\aav_ORCHID';
 %path_data = 'D:\Joshua\data\aav-Voltron2\mouse\puffing_data';
@@ -47,54 +56,52 @@ path_data = 'D:\Joshua\data\aav_ORCHID';
 path_lfp = "D:\Joshua\data\aav_ORCHID_in_vivo\LFP\230609";
 %path to folder one up from results. 
 path_folders = ...
-   'C:\Users\Josh Selfe\OneDrive - University of Cape Town\UCT\Masters\Data\testing_reporters_and_channels\aav-ORCHID\review';
+   'C:\Users\Josh Selfe\Downloads\temp_orchid';
 
 % variables to remove iterations of user input
 setClear = 1; % to clear previous structures. It is always 1. 0 if you want additional user input each time.
-patchData = 1; % set to 1 if you want to analyse the patch data, besides the light pulses or puff (ie, if cell was patched)
+patchData = 0; % set to 1 if you want to analyse the patch data, besides the light pulses or puff (ie, if cell was patched)
 setRecType = 1; % if 1: pre-set to set the type of recording, use if all recordings are the same. Otherwise 0: you will be asked for the type of each recording.
-recType = 'SLE'; % the pre-set recording type (if setRecType = 1)
+recType = 'VU'; % the pre-set recording type (if setRecType = 1)
 new_BGC = true; % if you want to implement the smoothed background correction (BGC) (where background trace is smoothed before being subtracted).
 faster = false; % if you want to disregard a bunch of checks and inputs
-askaboutBGC = false; % ask the question for using BGC, or not, or doing an iteration of each. If false, BGC is default.
+askaboutBGC = true; % ask the question for using BGC, or not, or doing an iteration of each. If false, BGC is default.
 
 % one of these must be true and the other two false. Unless it is a 0 Mg
 % ORCIHD rec, then have puff and 0Mg as true
-isORCHID = false;
-is0Mg = true; % for ORCHID 0 Mg recordings. have isORCHID as false, isPuff as true and is0Mg as true and it will work 
-isPuff = true;
+isORCHID = true;
+is0Mg = false; % for ORCHID 0 Mg recordings. have isORCHID as false, isPuff as true and is0Mg as true and it will work 
+isPuff = false;
 isCharacterisation = false;
-is0MgBaseline = true; % this is always false unless you are doing a 0 Mg baseline (13 x repeated stim) recording, in which case isPuff, is0Mg, and this are true
+is0MgBaseline = false; % this is always false unless you are doing a 0 Mg baseline (13 x repeated stim) recording, in which case isPuff, is0Mg, and this are true
 bursting = false; %true with puff and 0Mg
 mixed_trace = false; %for bursting, if it wasn't a cleanly timed recording ie 5 pulses in middle
 % additional inputs
 twentyfiveHz = true; % set to true if it is ORCHID, or false if it is 100 Hz Voltron
 in_vivo = false; % self-explanatory. 
-haslfp = false; % implemented after the above. Not all in vivo recs have lfp recs
+haslfp = false; % implemented after the above. 
 
 %for ORHCID and characterisation recordings
 setVorI = true; % make false if some cells were patched and others weren't
-VorI = 1; % 1 for current clamp; 0 for vclamp, unpatched
+VorI = 0; % 1 for current clamp; 0 for vclamp, unpatched
 vStepswps = 5; % for patch-clamp characterisation recordings (typicall V or I steps), how many vstep sweeps are there? Typically 8
 lightError = false; % set as true if you turned the light off before the end of image acquisition
-baselineLengthForAvgF = 80; % the number of images that baseline is taken over. This is fine for puff and for v steps,
-%   but likely not fine for ORCHID! it is the number of images baseline is
-%   taken over to add to once BGC has taken place
+baselineLengthForAvgF = 80; % the number of images that baseline fluorescence is taken over. 
 
 setSweepLength = true; % the length in ms of a single sweep in the .wcp recording. If false, the user will be asked to input a sweep length for every cell.
-sweepLength = 65000; % ms,
-% 2000 for i steps
-% 3000 ms for V steps
-% 25000 ms for ORCHID 
-% 65000 ms for ORCHID 0 MG
-% 7000 ms for puffing
+sweepLength = 25000; % ms,
+% 2000 for I step recordings
+% 3000 ms for V step recordings
+% 25000 ms for ORCHID recordings
+% 65000 ms for ORCHID 0 MG recordings
+% 7000 ms for GABA puff recordings
 
 %for ORCHID recordings:
 setLightPulses = true; % make false if number is different for different recordings. always true in modern times
-npulses = 13;
+npulses = 5; %5 for ORCHID recordings, 13 for longer 0 Mg2+ recordings for example.
 
-%% begin analysis
-%% folder handling:
+% begin analysis
+% folder handling:
 % we need to display all of the subfolders in the date folder and ask the
 %user to select any to be excluded!
 path_data = fullfile(path_data, date);
@@ -165,7 +172,7 @@ for f = 1:numel(cell_sfs)
         %call get_v_trace for different experimental paradigms
         if (isORCHID == true)
             if setLightPulses == false
-                npulses = input ("In this ORCHID recording, how many light pulses were there? (hint: 3 or 5)");
+                npulses = input ("In this ORCHID recording, how many light pulses were there? (typically 5)");
             else
                 npulses = npulses;
             end
@@ -325,7 +332,7 @@ for f = 1:numel(cell_sfs)
                     while gd == 0
                         bg_smoothed = smooth (bg, span);
                         plot (x_time, bg_smoothed);
-                        gd = input ("Does the smoothing of the background look suitable? 0/1");
+                        gd = input ("Data with background smoothing applied. 0/1 to continue or change smoothing parameters.");
                         if gd == 0
                             span = input ("Enter new span (default is 100):");
                         end
@@ -393,7 +400,7 @@ for f = 1:numel(cell_sfs)
                 if askaboutBGC == false
                     useBGCForBoth = 1;
                 else
-                    useBGCForBoth = input ("Do you want to use background corrected F (1), not use BGC F (0), or do an iteration of each (2)? 1/0/2");
+                    useBGCForBoth = input ("Press 1 to use background corrected F. Previous option: do not use BGC F (0), or do an iteration of each (2).");
                 end
                 %now saving all BGC figures
                 BG_dir = fullfile (path_results, 'BGC', rec_num);
@@ -424,7 +431,7 @@ for f = 1:numel(cell_sfs)
                         avgF2 = mean (fluoro2(1:baselineLengthForAvgF));
                     end
                 catch
-                    af = input( "Enter the number of images over which the average F (for baseline re-correction) is taken (<80): ");
+                    af = input( "Catch: Enter the number of images over which the average F (for baseline re-correction) is taken (<80): ");
                     avgF = mean (fluoro (1:af));
                     if useBGCForBoth == 2
                         avgF2 = mean (fluoro2(1:af));
@@ -468,7 +475,7 @@ for f = 1:numel(cell_sfs)
                 mean_dir2 = fullfile (mean_dir2, rec_num + sweeps(b));
                 % correct for bleaching
                 if faster == false
-                    z = input ("Do you want to zero the signal? 1/0");
+                    z = input ("Press 1 to improve detrending by replacing light response with straight line. 0 if not.");
                 elseif faster == true && in_vivo == false
                     z = 1;
                 elseif faster == true && in_vivo == true
@@ -517,7 +524,7 @@ for f = 1:numel(cell_sfs)
 
                 % get deta F
                 if faster == false
-                    gdf = input ("Get deltaF? 1/0. 0 if characterising");
+                    gdf = input ("Calculate deltaF? 1/0. 0 if characterising");
                 else
                     gdf = 1;
                 end
@@ -655,7 +662,7 @@ for f = 1:numel(cell_sfs)
                     xline (x_time(light_imgs (2,:)), 'r');
                     hold off
 
-                    wjefb = input ("Does it look alright?");
+                    wjefb = input ("View data. press any key and enter.");
                     fn = date + "_" + cell_num + "_" + cf;
                     path_results_lfp = fullfile (path_results, 'LFP', fn);
                     dir_exists (path_results_lfp);

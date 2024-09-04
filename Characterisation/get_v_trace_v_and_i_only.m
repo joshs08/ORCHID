@@ -1,7 +1,7 @@
-%% this script displays the voltage trace from the .wcp file from a patched cell
+% this script displays the voltage trace from the .wcp file from a patched cell
 % it only imports the first two (V and I) traces (along with camera)
 % applies a gaussian filter to data
-% returns dummy data for all the required variables (img_ps, img_pe (image
+% returns dummy data for all the required variables that are not relevant (img_ps, img_pe (image
 % puff starts and ends on) etc. 
 % it saves a figure with the voltage traces, and the filtered and
 % unfiltered traces
@@ -9,10 +9,9 @@
 %NB: it calculates image number and images upon which V steps begin and end
 
 % notes: for a 2 trace wcp file (V, I)
-% check current is fine
 
 % NB - endt is taken as the sweep length, which is set by me. this is
-% wrong, and has been changes in the other two get_v_trace scripts by
+% wrong, and has been changed in the other two get_v_trace scripts by
 % cutting them off when the imaging TTLs end - not done here as imaging
 % continues over many sweeps
 
@@ -92,7 +91,7 @@ if s == 1
         rsv = figure ();
         plot(time,trace1,time,output1);legend('Raw','Smoothed');
         
-        g = input ("Does this look bueno? 1/0");
+        g = input ("View data. 1 to continue or 0 to smooth again");
         if g == 0
             a2 = input ("Select new gaussian? 1/0");
             if a2 == 1
