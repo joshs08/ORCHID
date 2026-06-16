@@ -13,7 +13,8 @@
 
 function  [counted_TTLs, img_ps, img_pe, vm, i_hold, psp, quality, rtype, light_imgs, endt]...
     = get_v_trace_ORCHID (path_data, path_results, date, cell_num, wcp_file, npulses,...
-    setVorI, VorI, setSweepLength, swp_length) 
+    setVorI, VorI, setSweepLength, swp_length,...
+    ch_trace1, ch_trace2, ch_lightTTL, ch_camera, ch_blue_light) 
 
 % for subsequent code we need output. Dummy data
 img_ps = 1:20:1;
@@ -28,11 +29,11 @@ rtype = strings (20,1);
 wcp_path = string(fullfile (path_data, wcp_file));
 out = import_wcp(wcp_path, 'debug');
 
-trace1 = out.S{1};
-trace2 = out.S{2};
-lightTTL = out.S{3};
-camera = out.S{4};
-blue = out.S{5};
+trace1 = out.S{ch_trace1};
+trace2 = out.S{ch_trace2};
+lightTTL = out.S{ch_lightTTL};
+camera = out.S{ch_camera};
+blue = out.S{ch_blue_light};
 time = out.T; %gives the wrong time:(
 
 si = 10; ei = 11; %dummy data, should be puff indices

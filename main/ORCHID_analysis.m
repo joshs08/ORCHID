@@ -56,16 +56,23 @@ path_data = 'D:\Joshua\data\aav_ORCHID';
 path_lfp = "D:\Joshua\data\aav_ORCHID_in_vivo\LFP\230609";
 %path to folder one up from results. 
 path_folders = ...
-   'C:\Users\Josh Selfe\Downloads\temp_orchid';
+   'C:\Users\Josh Selfe\data';
+
+% set channels
+ch_trace1 = 1;
+ch_trace2 = 2; 
+ch_lightTTL = 3;
+ch_camera = 5; % 4 originally
+ch_blue_light = 4; % 5 originally
 
 % variables to remove iterations of user input
 setClear = 1; % to clear previous structures. It is always 1. 0 if you want additional user input each time.
 patchData = 0; % set to 1 if you want to analyse the patch data, besides the light pulses or puff (ie, if cell was patched)
 setRecType = 1; % if 1: pre-set to set the type of recording, use if all recordings are the same. Otherwise 0: you will be asked for the type of each recording.
-recType = 'VU'; % the pre-set recording type (if setRecType = 1)
+recType = 'ORCHID'; % the pre-set recording type (if setRecType = 1)
 new_BGC = true; % if you want to implement the smoothed background correction (BGC) (where background trace is smoothed before being subtracted).
-faster = false; % if you want to disregard a bunch of checks and inputs
-askaboutBGC = true; % ask the question for using BGC, or not, or doing an iteration of each. If false, BGC is default.
+faster = true; % if you want to disregard a bunch of checks and inputs
+askaboutBGC = false; % ask the question for using BGC, or not, or doing an iteration of each. If false, BGC is default.
 
 % one of these must be true and the other two false. Unless it is a 0 Mg
 % ORCIHD rec, then have puff and 0Mg as true
@@ -89,7 +96,7 @@ lightError = false; % set as true if you turned the light off before the end of 
 baselineLengthForAvgF = 80; % the number of images that baseline fluorescence is taken over. 
 
 setSweepLength = true; % the length in ms of a single sweep in the .wcp recording. If false, the user will be asked to input a sweep length for every cell.
-sweepLength = 25000; % ms,
+sweepLength = 13000; % ms,
 % 2000 for I step recordings
 % 3000 ms for V step recordings
 % 25000 ms for ORCHID recordings
@@ -178,7 +185,8 @@ for f = 1:numel(cell_sfs)
             end
             [counted_TTLs, img_ps, img_pe, vm, i_hold, psp, quality, rtype, light_imgs, endt] =...
                 get_v_trace_ORCHID (path_data, path_results, date, cell_num, wcp_file, npulses,...
-                setVorI, VorI, setSweepLength, sweepLength);
+                setVorI, VorI, setSweepLength, sweepLength,...
+                ch_trace1, ch_trace2, ch_lightTTL, ch_camera, ch_blue_light);
         elseif (isPuff == true)
             [counted_TTLs, img_ps, img_pe, vm, i_hold, psp, quality, rtype, endt, Mg_light_images] = get_v_trace (path_data, path_results, date, cell_num, wcp_file, patchData, setRecType, recType, is0Mg, npulses, bursting, mixed_trace);
             if Mg_light_images (1,1) < 20
